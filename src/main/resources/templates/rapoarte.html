@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rapoarte Complexe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark p-3 mb-4">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1">Rapoarte Avansate</span>
+        <a class="btn btn-outline-light btn-sm" href="/admin">Inapoi la Admin</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">1. Produse mai scumpe decât media</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item" th:each="p : ${produseScumpe}">
+                    <strong th:text="${p.nume}">Nume</strong> -
+                    <span th:text="${p.pret} + ' RON'" class="text-danger fw-bold">Pret</span>
+                </li>
+                <li th:if="${#lists.isEmpty(produseScumpe)}" class="list-group-item text-muted">Niciun rezultat.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">2. Produse cu Stoc Masiv</h5>
+            <small>Stoc mai mare decât maximul de la Apple</small>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Produs</th>
+                    <th>Marca</th>
+                    <th>Stoc</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${produseStocMare}">
+                    <td th:text="${p.nume}"></td>
+                    <td th:text="${p.marca}"></td>
+                    <td th:text="${p.stoc}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">3. Produse incomplete (Fără Specificații - NOT IN)</h5>
+        </div>
+        <div class="card-body">
+            <div th:if="${not #lists.isEmpty(produseIncomplete)}" class="alert alert-warning">
+                Atenție! Următoarele produse nu au specificații tehnice setate:
+            </div>
+            <ul>
+                <li th:each="p : ${produseIncomplete}" th:text="${p.nume}"></li>
+            </ul>
+            <div th:if="${#lists.isEmpty(produseIncomplete)}" class="text-success">
+                Toate produsele au specificații!
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

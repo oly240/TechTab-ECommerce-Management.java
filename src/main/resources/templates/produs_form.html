@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Formular Produs - TechTab</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0" th:if="${produs.id == null}">Adaugă Produs Nou</h4>
+                    <h4 class="mb-0" th:unless="${produs.id == null}">Editează Produs</h4>
+                </div>
+                <div class="card-body">
+
+                    <form th:action="@{/admin/produs/save}" th:object="${produs}" method="POST">
+
+                        <input type="hidden" th:field="*{id}" />
+
+                        <input type="hidden" th:field="*{specificatii.id}" />
+
+
+                        <h5 class="text-secondary mb-3">Detalii Generale</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label">Nume Model</label>
+                            <input type="text" th:field="*{nume}" class="form-control" placeholder="Ex: iPad Air 5" required />
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Categorie</label>
+                                <select th:field="*{categorie}" class="form-select">
+                                    <option th:each="cat : ${categorii}"
+                                            th:value="${cat.id}"
+                                            th:text="${cat.numeCategorie}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Producător</label>
+                                <select th:field="*{producator}" class="form-select">
+                                    <option th:each="prod : ${producatori}"
+                                            th:value="${prod.id}"
+                                            th:text="${prod.nume}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Preț (RON)</label>
+                                <input type="number" step="0.01" th:field="*{pret}" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Stoc (Bucăți)</label>
+                                <input type="number" th:field="*{stoc}" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h5 class="text-secondary mb-3">Specificații Tehnice</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Memorie RAM</label>
+                                <input type="text" th:field="*{specificatii.ram}" class="form-control" placeholder="Ex: 8GB" />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Memorie Internă (Stocare)</label>
+                                <input type="text" th:field="*{specificatii.memorieInterna}" class="form-control" placeholder="Ex: 256GB" />
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="/admin" class="btn btn-secondary me-md-2">Anulează</a>
+                            <button type="submit" class="btn btn-success px-4">Salvează Produsul</button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

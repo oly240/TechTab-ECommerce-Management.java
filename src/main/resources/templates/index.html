@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>TechTab Shop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark p-3">
+    <div class="container">
+        <a class="navbar-brand" href="/">TechTab Shop</a>
+        <a class="btn btn-outline-light" href="/admin">Admin Panel</a>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <form action="/" method="get" class="mb-4 d-flex gap-2">
+        <input type="text" name="keyword" class="form-control" placeholder="Cauta tableta (nume sau marca)..." th:value="${keyword}">
+        <button type="submit" class="btn btn-primary">Cauta</button>
+        <a href="/" class="btn btn-secondary">Reset</a>
+    </form>
+
+    <div class="row">
+        <div class="col-md-4 mb-3" th:each="produs : ${listProduse}">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary" th:text="${produs.nume}">Nume Produs</h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="${produs.marca}">Marca</h6>
+                    <p class="card-text">
+                        Price: <strong th:text="${produs.pret} + ' RON'">Pret</strong><br>
+                        Stoc: <span th:text="${produs.stoc}">0</span> buc.<br>
+                        Categorie: <span th:text="${produs.categorie.numeCategorie}">Cat</span>
+                    </p>
+                    <div class="alert alert-secondary p-1" style="font-size: 0.9em;">
+                        RAM: <span th:text="${produs.specificatii != null ? produs.specificatii.ram : '-'}"></span> |
+                        Stocare: <span th:text="${produs.specificatii != null ? produs.specificatii.memorieInterna : '-'}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

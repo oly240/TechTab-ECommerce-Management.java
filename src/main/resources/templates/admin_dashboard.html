@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard - TechTab</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-primary p-3 mb-4">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1">Admin Panel</span>
+        <div>
+            <a class="btn btn-warning btn-sm me-2" href="/admin/rapoarte">Vezi Rapoarte SQL</a>
+            <a class="btn btn-light btn-sm" href="/">Inapoi la Magazin</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">📊 Statistici Vânzări</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Categorie</th>
+                            <th>Valoare Stoc (RON)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="row : ${statistici}">
+                            <td th:text="${row[0]}">Categorie</td>
+                            <td th:text="${row[1]}">Suma</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Gestionare Tablete</h3>
+                <a href="/admin/produs/new" class="btn btn-success">+ Adauga Produs Nou</a>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Nume Model</th>
+                            <th>Marca</th>
+                            <th>Pret</th>
+                            <th>Stoc</th>
+                            <th style="width: 200px;">Actiuni (CRUD)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${produse}">
+                            <td>
+                                <strong th:text="${p.nume}">iPad</strong>
+                            </td>
+                            <td th:text="${p.marca}">Apple</td>
+                            <td th:text="${p.pret} + ' RON'">2500</td>
+
+                            <td>
+                                    <span th:classappend="${p.stoc < 5 ? 'text-danger fw-bold' : ''}"
+                                          th:text="${p.stoc} + ' buc.'">10</span>
+                            </td>
+
+                            <td>
+                                <a th:href="@{'/admin/produs/edit/' + ${p.id}}"
+                                   class="btn btn-sm btn-outline-warning me-1"
+                                   title="Editeaza Produsul">
+                                    ✏️
+                                </a>
+
+                                <a th:href="@{'/admin/produs/delete/' + ${p.id}}"
+                                   class="btn btn-sm btn-outline-danger"
+                                   title="Sterge Produsul"
+                                   onclick="return confirm('Esti sigur? Aceasta actiune este ireversibila!');">
+                                    🗑️
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0 text-dark">📦 Gestionare Comenzi (Activity Flow)</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Client</th>
+                            <th>Data</th>
+                            <th>Total</th>
+                            <th>Status Curent</th>
+                            <th>Actiuni (Schimbare Stare)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="comanda : ${comenzi}">
+                            <td th:text="${comanda.id}">1</td>
+                            <td th:text="${comanda.client.nume} + ' ' + ${comanda.client.prenume}">Client</td>
+                            <td th:text="${#temporals.format(comanda.data, 'dd-MM-yyyy HH:mm')}">Data</td>
+                            <td th:text="${comanda.total} + ' RON'">Total</td>
+
+                            <td>
+                                    <span class="badge rounded-pill"
+                                          th:classappend="${comanda.status.name() == 'COMPLETED' ? 'bg-success' :
+                                                           (comanda.status.name() == 'NEW' ? 'bg-primary' : 'bg-secondary')}"
+                                          th:text="${comanda.status}">STATUS</span>
+                            </td>
+
+                            <td>
+                                <a th:if="${comanda.status.name() == 'NEW'}"
+                                   th:href="@{'/admin/comanda/status/' + ${comanda.id} + '?status=PROCESSING'}"
+                                   class="btn btn-sm btn-outline-primary">Procesează</a>
+
+                                <a th:if="${comanda.status.name() == 'PROCESSING'}"
+                                   th:href="@{'/admin/comanda/status/' + ${comanda.id} + '?status=SHIPPED'}"
+                                   class="btn btn-sm btn-outline-warning">Expediază</a>
+
+                                <a th:if="${comanda.status.name() == 'SHIPPED'}"
+                                   th:href="@{'/admin/comanda/status/' + ${comanda.id} + '?status=COMPLETED'}"
+                                   class="btn btn-sm btn-success">Finalizează</a>
+
+                                <span th:if="${comanda.status.name() == 'COMPLETED'}" class="text-muted">Archived</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
